@@ -71,3 +71,6 @@ class PluginContainerTest(unittest.TestCase):
         self.assertTrue('<h1>test_with_parts.html</h1>' in response.data)
         self.assertTrue('<h1>test_plugin_1.test_part</h1>' in response.data)
         self.assertTrue('<h1>test_plugin_2.test_part</h1>' in response.data)
+
+if __name__ == '__main__':
+    unittest.main()
