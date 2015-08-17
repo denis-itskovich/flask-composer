@@ -3,8 +3,6 @@ __version__ = (0, 2, 0)
 
 import os
 
-from flask import Blueprint, request
-
 
 class TemplatePathLookup:
     def __init__(self, dirs, parent=None):
@@ -52,6 +50,8 @@ class TemplatePathLookup:
 
 class Composer:
     def __init__(self, app, rendering_adapter):
+        from flask import request
+
         self.app = app
         self.components = []
         self.component_map = {}
@@ -105,6 +105,8 @@ class Composer:
 
 class Component:
     def __init__(self, name, import_name, parts_templates=('parts.html',)):
+        from flask import Blueprint
+
         url_prefix = '/{0}/'.format(name)
         self.parts_templates = list(parts_templates)
         self.blueprint = Blueprint(name, import_name,
