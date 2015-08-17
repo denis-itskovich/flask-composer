@@ -13,7 +13,7 @@ class Helper:
         return '\n'.join(self.container.parts(name))
 
     def _endpoint(self, name, path):
-        key = '{}@{}'.format(name, path)
+        key = '{0}@{1}'.format(name, path)
         if key in self.endpoint_cache:
             return self.endpoint_cache[key]
 
@@ -23,15 +23,15 @@ class Helper:
         if plugin is not None:
             file = os.path.join(self.container.blueprints[plugin.name].root_path, name, path)
             if os.path.exists(file):
-                endpoint = '{}.{}'.format(plugin.name, name)
+                endpoint = '{0}.{1}'.format(plugin.name, name)
 
         self.endpoint_cache[key] = endpoint
         return endpoint
 
     def script(self, path):
         url = url_for(self._endpoint('static', path), filename=path)
-        return '<script type="text/javascript" src="{}"></script>'.format(url)
+        return '<script type="text/javascript" src="{0}"></script>'.format(url)
 
     def styles(self, path):
         url = url_for(self._endpoint('static', path), filename=path)
-        return '<link rel="stylesheet" type="text/css" media="all" href="{}"/>'.format(url)
+        return '<link rel="stylesheet" type="text/css" media="all" href="{0}"/>'.format(url)

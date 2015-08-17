@@ -51,26 +51,30 @@ class PluginContainerTest(unittest.TestCase):
         return plugin
 
     def testRenderPluginTemplate(self):
-        response = self.client.get('/test_plugin_1/test')
-        self.assertTrue('<h1>test_plugin_1 test.html</h1>' in response.data)
+        response = self.get_response('/test_plugin_1/test')
+        self.assertTrue('<h1>test_plugin_1 test.html</h1>' in response)
 
     def testRenderGlobalTemplate(self):
-        response = self.client.get('/test')
-        self.assertTrue('<h1>global test.html</h1>' in response.data)
+        response = self.get_response('/test')
+        self.assertTrue('<h1>global test.html</h1>' in response)
 
     def testRenderIncudeGlobalFromGlobalTakesGlobal(self):
-        response = self.client.get('/test_with_include')
-        self.assertTrue('<h1>global included.html</h1>' in response.data)
+        response = self.get_response('/test_with_include')
+        self.assertTrue('<h1>global included.html</h1>' in response)
 
     def testRenderIncudeFromPluginTakesLocal(self):
-        response = self.client.get('/test_plugin_1/test_with_include')
-        self.assertTrue('<h1>local test_plugin_1 included.html</h1>' in response.data)
+        response = self.get_response('/test_plugin_1/test_with_include')
+        self.assertTrue('<h1>local test_plugin_1 included.html</h1>' in response)
 
     def testRenderParts(self):
-        response = self.client.get('/test_with_parts')
-        self.assertTrue('<h1>test_with_parts.html</h1>' in response.data)
-        self.assertTrue('<h1>test_plugin_1.test_part</h1>' in response.data)
-        self.assertTrue('<h1>test_plugin_2.test_part</h1>' in response.data)
+        response = self.get_response('/test_with_parts')
+        self.assertTrue('<h1>test_with_parts.html</h1>' in response)
+        self.assertTrue('<h1>test_plugin_1.test_part</h1>' in response)
+        self.assertTrue('<h1>test_plugin_2.test_part</h1>' in response)
+
+    def get_response(self, path):
+        response = self.client.get(path)
+        return str(response.data)
 
 if __name__ == '__main__':
     unittest.main()

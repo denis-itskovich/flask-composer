@@ -108,7 +108,7 @@ class Composer:
 
 class Component:
     def __init__(self, name, import_name, parts_templates=('parts.html',)):
-        url_prefix = '/{}/'.format(name)
+        url_prefix = '/{0}/'.format(name)
         self.parts_templates = list(parts_templates)
         self.blueprint = Blueprint(name, import_name,
                                    static_folder='static',
@@ -143,10 +143,10 @@ class Component:
         self.lookup.parent = container.lookup
 
     def _assert_not_registered(self):
-        assert self.container is None, 'Plugin {} is already registered into container'.format(self.name)
+        assert self.container is None, 'Plugin {0} is already registered into container'.format(self.name)
 
     def _assert_registered(self):
-        assert self.container is not None, 'Plugin {} is not registered into container'.format(self.name)
+        assert self.container is not None, 'Plugin {0} is not registered into container'.format(self.name)
 
 
 class RenderingAdapter(object):
