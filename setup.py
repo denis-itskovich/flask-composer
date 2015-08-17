@@ -1,6 +1,6 @@
 __author__ = 'Denis'
 
-from distutils.core import setup
+from setuptools import setup
 from flask_composer import __version__
 
 setup(name='Flask-Composer',
@@ -14,7 +14,7 @@ setup(name='Flask-Composer',
       packages=['flask_composer'],
       keywords=['flask', 'composite', 'web'],
       install_requires=['Flask'],
-      test_requires=['Flask-Mako'],
+      test_requires=['Flask-Mako', 'nose'],
       classifiers=['Development Status :: 2 - Pre-Alpha',
                    'Programming Language :: Python',
                    'Programming Language :: Python :: 2.7',
@@ -22,4 +22,5 @@ setup(name='Flask-Composer',
                    'Framework :: Flask',
                    'License :: OSI Approved :: Apache Software License'
                    ],
+      test_suite='nose.collector',
       )
