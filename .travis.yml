@@ -8,5 +8,8 @@ python:
   - "3.3"
   - "3.4"
 
+install:
+  - pip install Flask==0.10.1 Flask-Mako==0.3
+
 script:
   - python test/test_plugins.py --verbose
