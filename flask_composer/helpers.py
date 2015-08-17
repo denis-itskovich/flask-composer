@@ -19,11 +19,11 @@ class Helper:
 
         endpoint = name
 
-        plugin = self.container.current_plugin
-        if plugin is not None:
-            file = os.path.join(self.container.blueprints[plugin.name].root_path, name, path)
+        component = self.container.current_component
+        if component is not None:
+            file = os.path.join(self.container.blueprints[component.name].root_path, name, path)
             if os.path.exists(file):
-                endpoint = '{0}.{1}'.format(plugin.name, name)
+                endpoint = '{0}.{1}'.format(component.name, name)
 
         self.endpoint_cache[key] = endpoint
         return endpoint
