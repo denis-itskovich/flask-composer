@@ -1,5 +1,5 @@
 # Flask-Composer
-[![Build status](https://travis-ci.org/denis-itskovich/flask-composer.svg?branch=master)](https://travis-ci.org/denis-itskovich/flask-composer)
+[![Build status](https://travis-ci.org/denis-itskovich/flask-composer.svg?branch=master)](https://travis-ci.org/denis-itskovich/flask-composer) [![Last package version](https://img.shields.io/pypi/v/Flask-Composer.svg)](https://pypi.python.org/pypi/Flask-Composer)
 ---
 ### Composite Web UI extension for Flask
 
