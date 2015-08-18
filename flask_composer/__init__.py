@@ -1,5 +1,5 @@
 __author__ = 'Denis Itskovich'
-__version__ = (0, 2, 0)
+__version__ = (0, 3, 0)
 
 import os
 
@@ -158,32 +158,38 @@ class RenderingAdapter(object):
 
 class MakoRenderingAdapter(RenderingAdapter):
     def __init__(self, app):
-        import flask_mako as fm
+        import mako.lookup as lookup
         import mako as mako
+        import mako.template as template
 
         self.mako = mako
-        self.flask_mako = fm
-        self.templates = fm.MakoTemplates()
-        self.templates.init_app(app)
+        self.lookup = lookup
+        self.template = template
+        # self.flask_mako = fm
+        # self.templates = fm.MakoTemplates()
+        # self.templates.init_app(app)
+        self.app = app
 
     def _create_template(self, lookup, path):
         factory = lambda path: self._create_template(lookup, path)
 
-        class Lookup(self.mako.lookup.TemplateLookup):
+        class Lookup(self.lookup.TemplateLookup):
             def get_template(self, template_name):
                 return lookup.get_template(template_name, factory)
 
         mako_lookup = Lookup(directories=lookup.directories)
-        return self.mako.template.Template(filename=path, lookup=mako_lookup)
+        return self.template.Template(filename=path, lookup=mako_lookup)
 
     def _get_template(self, lookup, template_name):
         return lookup.get_template(template_name, lambda path: self._create_template(lookup, path))
 
     def render_template(self, lookup, template_name, *args, **kwargs):
+        kwargs.update(self.app.jinja_env.globals)
         template = self._get_template(lookup, template_name)
         return template.render(*args, **kwargs) if template is not None else ''
 
     def render_parts(self, lookup, template_names, part_name, *args, **kwargs):
+        kwargs.update(self.app.jinja_env.globals)
         rendered_parts = []
         for template_name in template_names:
             template = self._get_template(lookup, template_name)
