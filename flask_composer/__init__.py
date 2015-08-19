@@ -1,5 +1,3 @@
-from flask.ext.composer.adapters import RenderingAdapter
-
 __author__ = 'Denis Itskovich'
 __version__ = (0, 3, 0)
 
@@ -108,6 +106,7 @@ class Composer:
 class Component:
     def __init__(self, name, import_name, parts_templates=('parts.html',)):
         from flask import Blueprint
+        from flask.ext.composer.adapters import RenderingAdapter
 
         url_prefix = '/{0}/'.format(name)
         self.parts_templates = list(parts_templates)
