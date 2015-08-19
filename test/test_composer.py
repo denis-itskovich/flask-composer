@@ -3,7 +3,8 @@ from flask import Flask
 __author__ = 'Denis'
 
 import unittest
-from flask.ext.composer import Composer, MakoRenderingAdapter, Component
+from flask.ext.composer import Composer, Component
+from flask.ext.composer.adapters import MakoRenderingAdapter
 
 
 class ComposerTest(unittest.TestCase):

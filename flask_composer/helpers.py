@@ -9,8 +9,8 @@ class Helper:
         self.container = container
         self.endpoint_cache = {}
 
-    def parts(self, name):
-        return '\n'.join(self.container.parts(name))
+    def parts(self, name, before='', after=''):
+        return '\n'.join(before + part + after for part in self.container.parts(name))
 
     def _endpoint(self, name, path):
         key = '{0}@{1}'.format(name, path)
