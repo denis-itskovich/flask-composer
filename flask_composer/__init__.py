@@ -2,7 +2,6 @@ from flask import Request
 from flask.ext.composer.adapters import RenderingAdapter
 
 __author__ = 'Denis Itskovich'
-__version__ = (0, 3, 2)
 
 import os
 

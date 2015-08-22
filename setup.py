@@ -1,7 +1,7 @@
-__author__ = 'Denis'
-
 from setuptools import setup
-from flask_composer import __version__
+
+__author__ = 'Denis'
+__version__ = (0, 3, 2)
 
 setup(name='Flask-Composer',
       version='.'.join(str(i) for i in __version__),
