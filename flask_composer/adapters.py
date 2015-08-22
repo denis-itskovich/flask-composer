@@ -24,6 +24,9 @@ class MakoRenderingAdapter(RenderingAdapter):
             def get_template(self, template_name):
                 return lookup.get_template(template_name, factory)
 
+            def adjust_uri(self, uri, relativeto):
+                return lookup.adjust_uri(uri, relativeto)
+
         mako_lookup = Lookup(directories=lookup.directories)
         return self.template.Template(filename=path, lookup=mako_lookup)
 

@@ -1,5 +1,8 @@
+from flask import Request
+from flask.ext.composer.adapters import RenderingAdapter
+
 __author__ = 'Denis Itskovich'
-__version__ = (0, 3, 1)
+__version__ = (0, 3, 2)
 
 import os
 
@@ -39,6 +42,17 @@ class TemplatePathLookup:
 
         return None
 
+    def adjust_uri(self, uri, relativeto=''):
+        for template_dir in [relativeto] + self.dirs:
+            path = os.path.join(template_dir, uri)
+            if os.path.isfile(path):
+                return path
+
+        if self.parent is not None:
+            return self.parent.adjust_uri(uri)
+
+        return uri
+
     def _get_template_path(self, template_name):
         for template_dir in self.dirs:
             path = os.path.join(template_dir, template_name)
@@ -64,10 +78,12 @@ class Composer:
         @app.before_request
         def before_request():
             self.current_component = self.component_map.get(request.blueprint, None)
+            request.component = self.current_component
 
         @app.after_request
         def after_request(response):
             self.current_component = None
+            request.component = None
             return response
 
     def add_context(self, **context):
@@ -83,14 +99,23 @@ class Composer:
         return self.rendering_adapter.render_template(self.lookup, template_name, **self.get_context(context))
 
     def parts(self, name):
+        from flask import request
+
         parts = []
+        req_component = request.component if hasattr(request, 'component') else None
         cur_component = self.current_component
         try:
             for component in self.components:
                 self.current_component = component
+                request.component = component
+
                 parts += component.render_parts(name)
         finally:
             self.current_component = cur_component
+            if req_component is not None:
+                request.component = req_component
+            else:
+                delattr(request, 'component')
 
         return parts
 
@@ -106,7 +131,6 @@ class Composer:
 class Component:
     def __init__(self, name, import_name, parts_templates=('parts.html',)):
         from flask import Blueprint
-        from flask.ext.composer.adapters import RenderingAdapter
 
         url_prefix = '/{0}/'.format(name)
         self.parts_templates = list(parts_templates)
@@ -147,3 +171,14 @@ class Component:
 
     def _assert_registered(self):
         assert self.container is not None, 'Plugin {0} is not registered into container'.format(self.name)
+
+
+def wrap_request_blueprint(getter):
+    def request_blueprint(_self):
+        if not hasattr(_self, 'component') or _self.component is None:
+            return getter(_self)
+        return _self.component.name
+
+    return request_blueprint
+
+Request.blueprint = property(wrap_request_blueprint(Request.blueprint.fget))
