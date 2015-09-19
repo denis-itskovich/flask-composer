@@ -40,11 +40,11 @@ class ComposerTest(unittest.TestCase):
     def create_component(self, name, import_name):
         component = Component(name, import_name)
 
-        @component.route('test')
+        @component.route('/test')
         def component_test():
             return component.render_template('test.html')
 
-        @component.route('test_with_include')
+        @component.route('/test_with_include')
         def component_test_with_include():
             return component.render_template('test_with_include.html')
 

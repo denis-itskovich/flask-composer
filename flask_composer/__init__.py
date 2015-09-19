@@ -146,7 +146,7 @@ class Component:
         self.blueprint = Blueprint(name, import_name,
                                    static_folder='static',
                                    template_folder='templates',
-                                   url_prefix=url_prefix + '/')
+                                   url_prefix=url_prefix)
 
         self.route = self.blueprint.route
         self.rendering_adapter = RenderingAdapter()

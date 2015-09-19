@@ -1,7 +1,7 @@
 from setuptools import setup
 
 __author__ = 'Denis'
-__version__ = (0, 4, 0)
+__version__ = (0, 4, 1)
 
 setup(name='Flask-Composer',
       version='.'.join(str(i) for i in __version__),
