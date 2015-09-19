@@ -1,4 +1,4 @@
-from flask import Request, Flask
+from flask import Request
 from flask.ext.composer.adapters import RenderingAdapter
 import os
 import json
