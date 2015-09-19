@@ -1,8 +1,7 @@
 from flask import Flask
-
-__author__ = 'Denis'
-
 import unittest
+import json
+import logging
 from flask.ext.composer import Composer, Component
 from flask.ext.composer.adapters import MakoRenderingAdapter
 
@@ -10,6 +9,7 @@ from flask.ext.composer.adapters import MakoRenderingAdapter
 class ComposerTest(unittest.TestCase):
     def setUp(self):
         self.flask = Flask(__name__)
+        self.log = logging.getLogger(self.id())
 
         self.container = Composer(self.flask, MakoRenderingAdapter(self.flask))
 
@@ -73,8 +73,22 @@ class ComposerTest(unittest.TestCase):
         self.assertTrue('<h1>test_component_1.test_part</h1>' in response)
         self.assertTrue('<h1>test_component_2.test_part</h1>' in response)
 
+    def testGetModules(self):
+        response = self.get_response('/components')
+
+        resp_dic = json.loads(response)
+        self.assertEqual(2, len(resp_dic))
+        self.assertEqual('/test_component_1/static/js', resp_dic[0]['location'])
+        self.assertEqual('test_component_1', resp_dic[0]['name'])
+        self.assertTrue(resp_dic[0]['definition'] is not None)
+        self.assertEqual('/test_component_2/static/js', resp_dic[1]['location'])
+        self.assertEqual('test_component_2', resp_dic[1]['name'])
+        self.assertTrue(resp_dic[1]['definition'] is None)
+
     def get_response(self, path):
         response = self.client.get(path)
+        self.log.info("Response: %s", str(response.data))
+
         return str(response.data)
 
 if __name__ == '__main__':

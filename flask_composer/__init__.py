@@ -1,9 +1,10 @@
-from flask import Request
+from flask import Request, Flask
 from flask.ext.composer.adapters import RenderingAdapter
+import os
+import json
+
 
 __author__ = 'Denis Itskovich'
-
-import os
 
 
 class TemplatePathLookup:
@@ -74,6 +75,15 @@ class Composer:
         self.current_component = None
         self.lookup = TemplatePathLookup(dirs=[(app.root_path, app.template_folder)])
 
+        @app.route('/components')
+        def get_modules():
+            return json.dumps(
+                [{
+                    'name': c.name,
+                    'location': c.module_location + '/js',
+                    'definition': c.module
+                 } for c in self.components])
+
         @app.before_request
         def before_request():
             self.current_component = self.component_map.get(request.blueprint, None)
@@ -131,18 +141,37 @@ class Component:
     def __init__(self, name, import_name, parts_templates=('parts.html',)):
         from flask import Blueprint
 
-        url_prefix = '/{0}/'.format(name)
+        url_prefix = '/{0}'.format(name)
         self.parts_templates = list(parts_templates)
         self.blueprint = Blueprint(name, import_name,
                                    static_folder='static',
                                    template_folder='templates',
-                                   url_prefix=url_prefix)
+                                   url_prefix=url_prefix + '/')
 
         self.route = self.blueprint.route
         self.rendering_adapter = RenderingAdapter()
         self.container = None
         self.name = name
         self.lookup = TemplatePathLookup(dirs=[(self.blueprint.root_path, self.blueprint.template_folder)])
+        self.module_location = url_prefix + self.blueprint.static_url_path
+        self._module = None
+        self._module_time_stamp = None
+
+    @property
+    def module(self):
+        module_def_path = os.path.join(self.blueprint.static_folder, 'module.json')
+
+        if self._module_time_stamp is not None:
+            timestamp = os.path.getmtime(module_def_path)
+            if timestamp <= self._module_time_stamp:
+                return self._module
+
+        if os.path.isfile(module_def_path):
+            self._module_time_stamp = os.path.getmtime(module_def_path)
+            with open(module_def_path) as f:
+                self._module = json.loads(f.read())
+
+        return self._module
 
     def render_parts(self, name, **context):
         self._assert_registered()

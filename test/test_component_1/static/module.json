@@ -1,0 +1,5 @@
+{
+  "parts": {
+    "client-side-parts": ["client-part-1.1", "client-part-1.2"]
+  }
+}
