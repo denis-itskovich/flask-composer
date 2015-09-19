@@ -87,9 +87,9 @@ class ComposerTest(unittest.TestCase):
 
     def get_response(self, path):
         response = self.client.get(path)
-        self.log.info("Response: %s", str(response.data))
+        self.log.info("Response: %s", response.data)
 
-        return str(response.data)
+        return response.data.decode('utf-8')
 
 if __name__ == '__main__':
     unittest.main()
